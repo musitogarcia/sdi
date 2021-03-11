@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Authentication\Authenticator\ResultInterface;
+
 /**
  * Users Controller
  *
@@ -70,6 +72,7 @@ class UsersController extends AppController
      */
     public function edit($id = null)
     {
+        $this->Authorization->skipAuthorization();
         $user = $this->Users->get($id, [
             'contain' => [],
         ]);
@@ -94,6 +97,7 @@ class UsersController extends AppController
      */
     public function delete($id = null)
     {
+        $this->Authorization->skipAuthorization();
         $this->request->allowMethod(['post', 'delete']);
         $user = $this->Users->get($id);
         if ($this->Users->delete($user)) {
@@ -108,8 +112,6 @@ class UsersController extends AppController
     public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         parent::beforeFilter($event);
-        // Configure the login action to not require authentication, preventing
-        // the infinite redirect loop issue
         $this->Authentication->addUnauthenticatedActions(['login']);
     }
 
@@ -119,16 +121,30 @@ class UsersController extends AppController
 
         $this->request->allowMethod(['get', 'post']);
         $result = $this->Authentication->getResult();
-        // regardless of POST or GET, redirect if user is logged in
-        if ($result->isValid()) {
-            // redirect to /articles after login success
-            $redirect = $this->request->getQuery('redirect', '/');
-
-            return $this->redirect($redirect);
+        $estado = $result->getStatus();
+        if ($estado === ResultInterface::SUCCESS) {
+            $output = 1;
+        } else if ($estado === ResultInterface::FAILURE_IDENTITY_NOT_FOUND || $estado === ResultInterface::FAILURE_CREDENTIALS_INVALID) {
+            if (isset($this->request->getData()['username'])) {
+                $users = $this->Users->find('all', ['conditions' => ['username' => $this->request->getData()['username']]]);
+                if (empty($users->first)) {
+                    $output = 2;
+                } else {
+                    $output = 3;
+                }
+            } else {
+                $output = 3;
+            }
+        } else {
+            $output = 4;
         }
-        // display error if user submitted and authentication failed
-        if ($this->request->is('post') && !$result->isValid()) {
-            $this->Flash->error(__('Invalid username or password'));
+
+        if (!empty($this->request->getData())) {
+            $this->set(array(
+                'output' => $output,
+                '_serialize' => 'output'
+            ));
+            $this->RequestHandler->renderAs($this, 'json');
         }
     }
 
@@ -137,7 +153,7 @@ class UsersController extends AppController
         $this->Authorization->skipAuthorization();
 
         $result = $this->Authentication->getResult();
-        // regardless of POST or GET, redirect if user is logged in
+
         if ($result->isValid()) {
             $this->Authentication->logout();
             return $this->redirect(['controller' => 'Users', 'action' => 'login']);
