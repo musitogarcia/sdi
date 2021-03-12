@@ -51,8 +51,8 @@
                     <td><?= $this->Number->format($user->access) ?></td>
                 </tr>
                 <tr>
-                    <th><?= __('Profile') ?></th>
-                    <td><?= $this->Number->format($user->profile) ?></td>
+                    <th><?= __('Role') ?></th>
+                    <td><?= $this->Number->format($user->role) ?></td>
                 </tr>
                 <tr>
                     <th><?= __('Created') ?></th>

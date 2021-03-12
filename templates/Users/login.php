@@ -31,7 +31,6 @@
                     data: $("#form-login").serialize(),
                     datatype: 'json',
                     success: function(response) {
-                        alert(response);
                         if (response == 1) {
                             window.location.href = "/sdi";
                         } else {

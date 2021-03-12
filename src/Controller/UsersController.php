@@ -127,7 +127,7 @@ class UsersController extends AppController
         } else if ($estado === ResultInterface::FAILURE_IDENTITY_NOT_FOUND || $estado === ResultInterface::FAILURE_CREDENTIALS_INVALID) {
             if (isset($this->request->getData()['username'])) {
                 $users = $this->Users->find('all', ['conditions' => ['username' => $this->request->getData()['username']]]);
-                if (empty($users->first)) {
+                if (empty($users->first())) {
                     $output = 2;
                 } else {
                     $output = 3;

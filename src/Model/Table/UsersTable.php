@@ -105,9 +105,9 @@ class UsersTable extends Table
             ->notEmptyString('access');
 
         $validator
-            ->integer('profile')
-            ->requirePresence('profile', 'create')
-            ->notEmptyFile('profile');
+            ->integer('role')
+            ->requirePresence('role', 'create')
+            ->notEmptyString('role');
 
         return $validator;
     }
