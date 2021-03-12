@@ -55,8 +55,7 @@ use Authorization\Policy\OrmResolver;
  */
 class Application extends BaseApplication
 implements
-    AuthenticationServiceProviderInterface,
-    AuthorizationServiceProviderInterface
+    AuthenticationServiceProviderInterface
 {
     /**
      * Load all the application configuration and bootstrap logic.
@@ -103,7 +102,7 @@ implements
             ->add(new AuthenticationMiddleware($this));
 
 
-        $middlewareQueue->add(new AuthorizationMiddleware($this));
+        //$middlewareQueue->add(new AuthorizationMiddleware($this));
 
         return $middlewareQueue;
     }
@@ -135,13 +134,6 @@ implements
         ]);
 
         return $authenticationService;
-    }
-
-    public function getAuthorizationService(ServerRequestInterface $request): AuthorizationServiceInterface
-    {
-        $resolver = new OrmResolver();
-
-        return new AuthorizationService($resolver);
     }
 
     /**

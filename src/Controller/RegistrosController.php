@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -18,7 +19,7 @@ class RegistrosController extends AppController
      */
     public function index()
     {
-        $this->Authorization->skipAuthorization();
+        //$this->Authorization->skipAuthorization();
         $registros = $this->paginate($this->Registros);
 
         $this->set(compact('registros'));
@@ -47,6 +48,8 @@ class RegistrosController extends AppController
      */
     public function add()
     {
+        //$this->Authorization->skipAuthorization();
+
         $registro = $this->Registros->newEmptyEntity();
         if ($this->request->is('post')) {
             $registro = $this->Registros->patchEntity($registro, $this->request->getData());

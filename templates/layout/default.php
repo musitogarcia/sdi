@@ -15,7 +15,7 @@
  * @var \App\View\AppView $this
  */
 
-$cakeDescription = 'CakePHP: the rapid development php framework';
+//$cakeDescription = 'Sistema de inventarios | Izzi';
 ?>
 <!DOCTYPE html>
 <html>
@@ -23,8 +23,11 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 <head>
     <?= $this->Html->charset() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>
+    <!-- <title>
         <?= $cakeDescription ?>:
+        <?= $this->fetch('title') ?>
+    </title> -->
+    <title>
         <?= $this->fetch('title') ?>
     </title>
     <?= $this->Html->meta('icon') ?>
@@ -60,5 +63,9 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     <footer>
     </footer>
 </body>
+
+<footer>
+    <span><b>José Alejandro Musito García</b></span>
+</footer>
 
 </html>

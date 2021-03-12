@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Authentication\Authenticator\ResultInterface;
+use App\Model\Entity\Visita;
+use Cake\ORM\Locator\LocatorAwareTrait;
 
 /**
  * Users Controller
@@ -21,7 +23,7 @@ class UsersController extends AppController
      */
     public function index()
     {
-        $this->Authorization->skipAuthorization();
+        //$this->Authorization->skipAuthorization();
         $users = $this->paginate($this->Users);
 
         $this->set(compact('users'));
@@ -72,7 +74,7 @@ class UsersController extends AppController
      */
     public function edit($id = null)
     {
-        $this->Authorization->skipAuthorization();
+        //$this->Authorization->skipAuthorization();
         $user = $this->Users->get($id, [
             'contain' => [],
         ]);
@@ -97,7 +99,7 @@ class UsersController extends AppController
      */
     public function delete($id = null)
     {
-        $this->Authorization->skipAuthorization();
+        //$this->Authorization->skipAuthorization();
         $this->request->allowMethod(['post', 'delete']);
         $user = $this->Users->get($id);
         if ($this->Users->delete($user)) {
@@ -117,13 +119,19 @@ class UsersController extends AppController
 
     public function login()
     {
-        $this->Authorization->skipAuthorization();
+        //$this->Authorization->skipAuthorization();
 
         $this->request->allowMethod(['get', 'post']);
         $result = $this->Authentication->getResult();
         $estado = $result->getStatus();
         if ($estado === ResultInterface::SUCCESS) {
             $output = 1;
+            if (!empty($this->request->getData())) {
+                $this->registrarVisita($this->request->getData()['username']);
+            } else {
+                $redirect = $this->request->getQuery('redirect', '/');
+                return $this->redirect($redirect);
+            }
         } else if ($estado === ResultInterface::FAILURE_IDENTITY_NOT_FOUND || $estado === ResultInterface::FAILURE_CREDENTIALS_INVALID) {
             if (isset($this->request->getData()['username'])) {
                 $users = $this->Users->find('all', ['conditions' => ['username' => $this->request->getData()['username']]]);
@@ -148,9 +156,25 @@ class UsersController extends AppController
         }
     }
 
+    public function registrarVisita($usuario)
+    {
+        $query = $this->Users->find('all', ['conditions' => ['username' => $usuario]]);
+        $row = $query->first();
+
+        $tablaVisitas = $this->getTableLocator()->get('Visitas');
+        $visita = $tablaVisitas->newEmptyEntity();
+
+        $visita->fecha = date('Y-m-d H:i:s');
+        $visita->user_id = $row->id;
+
+        if ($tablaVisitas->save($visita)) {
+            $visita->id;
+        }
+    }
+
     public function logout()
     {
-        $this->Authorization->skipAuthorization();
+        //$this->Authorization->skipAuthorization();
 
         $result = $this->Authentication->getResult();
 
