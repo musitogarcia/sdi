@@ -122,12 +122,17 @@ class UsersController extends AppController
         $result = $this->Authentication->getResult();
         $estado = $result->getStatus();
         if ($estado === ResultInterface::SUCCESS) {
-            $output = 1;
-            if (!empty($this->request->getData())) {
-                $this->registrarVisita($this->request->getData()['username']);
+            if ($this->Authentication->getIdentity()->get('access') == 1) {
+                $output = 1;
+                if (!empty($this->request->getData())) {
+                    $this->registrarVisita($this->request->getData()['username']);
+                } else {
+                    $redirect = $this->request->getQuery('redirect', '/');
+                    return $this->redirect($redirect);
+                }
             } else {
-                $redirect = $this->request->getQuery('redirect', '/');
-                return $this->redirect($redirect);
+                $this->Authentication->logout();
+                $output = 4;
             }
         } else if ($estado === ResultInterface::FAILURE_IDENTITY_NOT_FOUND || $estado === ResultInterface::FAILURE_CREDENTIALS_INVALID) {
             if (isset($this->request->getData()['username'])) {
@@ -141,7 +146,7 @@ class UsersController extends AppController
                 $output = 3;
             }
         } else {
-            $output = 4;
+            $output = 5;
         }
 
         if (!empty($this->request->getData())) {

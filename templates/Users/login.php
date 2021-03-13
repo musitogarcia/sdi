@@ -45,6 +45,10 @@
                             } else if (response == 3) {
                                 $('#password').get(0).setCustomValidity('Invalid');
                                 $('#error-password').html('Contraseña incorrecta');
+                            } else if (response == 4) {
+                                $('#username').get(0).setCustomValidity('Invalid');
+                                $('#password').get(0).setCustomValidity('Invalid');
+                                $('#error-username').html('Usuario no permitido');
                             } else {
                                 alert('Error iniciando sesión');
                             }
