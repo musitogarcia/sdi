@@ -109,13 +109,9 @@ implements
 
         // Load identifiers, ensure we check email and password fields
         $authenticationService->loadIdentifier('Authentication.Password', [
-            'resolver' => [
-                'className' => 'Authentication.Orm',
-                'finder' => 'forAuthentication',
-            ],
             'fields' => [
                 'username' => 'username',
-                'password' => 'password',
+                'password' => 'password'
             ]
         ]);
 

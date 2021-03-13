@@ -62,9 +62,11 @@
                         <li class="nav-item">
                             <a class="nav-link <?php echo isset($tab) ? (($tab == 'bandeja') ? "active" : "") : "" ?>" href=<?= $this->Url->build(['controller' => 'registros', 'action' => 'index']) ?>>Bandeja de productos</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link <?php echo isset($tab) ? (($tab == 'reportes') ? "active" : "") : "" ?>" href=<?= $this->Url->build(['controller' => 'registros', 'action' => 'reportes']) ?>>Reportes</a>
-                        </li>
+                        <?php if ($this->Identity->get('role') === 0) : ?>
+                            <li class="nav-item">
+                                <a class="nav-link <?php echo isset($tab) ? (($tab == 'reportes') ? "active" : "") : "" ?>" href=<?= $this->Url->build(['controller' => 'registros', 'action' => 'reportes']) ?>>Reportes</a>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                     <span class="navbar-text">
                         <a class="dropdown-item" href=<?= $this->Url->build(['controller' => 'users', 'action' => 'logout']) ?>><b><?= $this->Identity->get('username') ?></b> | Cerrar sesión</a>

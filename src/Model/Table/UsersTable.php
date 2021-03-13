@@ -46,8 +46,7 @@ class UsersTable extends Table
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
         $this->belongsTo('Roles', [
-            'foreignKey' => 'role',
-            'propertyName' => 'role_c'
+            'foreignKey' => 'role'
         ]);
 
         $this->addBehavior('Timestamp');
@@ -133,10 +132,5 @@ class UsersTable extends Table
         $rules->add($rules->isUnique(['email']), ['errorField' => 'email']);
 
         return $rules;
-    }
-
-    public function findForAuthentication(\Cake\ORM\Query $query, array $options): \Cake\ORM\Query
-    {
-        return $query->contain('Roles');
     }
 }
