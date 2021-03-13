@@ -22,21 +22,25 @@ class RegistrosController extends AppController
      */
     public function index()
     {
-        $this->set('tab', 'bandeja');
-        $registros = $this->Registros->find()
-            ->select(
-                [
-                    'id' => 'Registros.id',
-                    'nombre' => 'Registros.nombre',
-                    'categoria' => 'Categorias.descripcion',
-                    'sucursal' => 'Sucursales.ubicacion',
-                    'id_estado' => 'Registros.id_estado'
-                ]
-            )
-            ->innerJoinWith('Sucursales')
-            ->innerJoinWith('Categorias');
-        $registros = $this->paginate($registros);
-        $this->set(compact('registros'));
+        if ($this->Authentication->getIdentity()->get('role') == 2) {
+            $this->set('tab', 'bandeja');
+            $registros = $this->Registros->find()
+                ->select(
+                    [
+                        'id' => 'Registros.id',
+                        'nombre' => 'Registros.nombre',
+                        'categoria' => 'Categorias.descripcion',
+                        'sucursal' => 'Sucursales.ubicacion',
+                        'id_estado' => 'Registros.id_estado'
+                    ]
+                )
+                ->innerJoinWith('Sucursales')
+                ->innerJoinWith('Categorias');
+            $registros = $this->paginate($registros);
+            $this->set(compact('registros'));
+        } else {
+            return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
+        }
     }
 
     /**
@@ -62,30 +66,34 @@ class RegistrosController extends AppController
      */
     public function add()
     {
-        $registro = $this->Registros->newEmptyEntity();
-        if ($this->request->is('post')) {
-            $registro = $this->Registros->patchEntity($registro, $this->request->getData());
-            $output = 0;
-            if ($this->Registros->save($registro)) {
-                $output = 1;
+        if ($this->Authentication->getIdentity()->get('role') == 3) {
+            $registro = $this->Registros->newEmptyEntity();
+            if ($this->request->is('post')) {
+                $registro = $this->Registros->patchEntity($registro, $this->request->getData());
+                $output = 0;
+                if ($this->Registros->save($registro)) {
+                    $output = 1;
+                }
             }
-        }
 
-        if (!empty($this->request->getData())) {
-            $this->set(array(
-                'output' => $output,
-                '_serialize' => 'output'
-            ));
-            $this->RequestHandler->renderAs($this, 'json');
+            if (!empty($this->request->getData())) {
+                $this->set(array(
+                    'output' => $output,
+                    '_serialize' => 'output'
+                ));
+                $this->RequestHandler->renderAs($this, 'json');
+            } else {
+                $this->set('tab', 'registro');
+                $categorias = TableRegistry::getTableLocator()->get('Categorias');
+                $sucursales = TableRegistry::getTableLocator()->get('Sucursales');
+                $opcionesCategorias = $categorias->find('all')->combine('id', 'descripcion');
+                $opcionesSucursales = $sucursales->find('all')->combine('id', 'ubicacion');
+                $this->set(compact('opcionesCategorias'));
+                $this->set(compact('opcionesSucursales'));
+                $this->set(compact('registro'));
+            }
         } else {
-            $this->set('tab', 'registro');
-            $categorias = TableRegistry::getTableLocator()->get('Categorias');
-            $sucursales = TableRegistry::getTableLocator()->get('Sucursales');
-            $opcionesCategorias = $categorias->find('all')->combine('id', 'descripcion');
-            $opcionesSucursales = $sucursales->find('all')->combine('id', 'ubicacion');
-            $this->set(compact('opcionesCategorias'));
-            $this->set(compact('opcionesSucursales'));
-            $this->set(compact('registro'));
+            return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
         }
     }
 
@@ -98,28 +106,32 @@ class RegistrosController extends AppController
      */
     public function edit($id = null)
     {
-        $registro = $this->Registros->get($id, [
-            'contain' => ['Sucursales', 'Estados', 'Categorias'],
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $registro = $this->Registros->patchEntity($registro, $this->request->getData());
-            $output = 0;
-            if ($this->Registros->save($registro)) {
-                $output = 1;
+        if ($this->Authentication->getIdentity()->get('role') == 2) {
+            $registro = $this->Registros->get($id, [
+                'contain' => ['Sucursales', 'Estados', 'Categorias'],
+            ]);
+            if ($this->request->is(['patch', 'post', 'put'])) {
+                $registro = $this->Registros->patchEntity($registro, $this->request->getData());
+                $output = 0;
+                if ($this->Registros->save($registro)) {
+                    $output = 1;
+                }
             }
-        }
 
-        if (!empty($this->request->getData())) {
-            $this->set(array(
-                'output' => $output,
-                '_serialize' => 'output'
-            ));
-            $this->RequestHandler->renderAs($this, 'json');
+            if (!empty($this->request->getData())) {
+                $this->set(array(
+                    'output' => $output,
+                    '_serialize' => 'output'
+                ));
+                $this->RequestHandler->renderAs($this, 'json');
+            } else {
+                $estados = TableRegistry::getTableLocator()->get('Estados');
+                $opcionesEstados = $estados->find('all')->combine('id', 'descripcion');
+                $this->set(compact('opcionesEstados'));
+                $this->set(compact('registro'));
+            }
         } else {
-            $estados = TableRegistry::getTableLocator()->get('Estados');
-            $opcionesEstados = $estados->find('all')->combine('id', 'descripcion');
-            $this->set(compact('opcionesEstados'));
-            $this->set(compact('registro'));
+            return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
         }
     }
 
@@ -132,15 +144,19 @@ class RegistrosController extends AppController
      */
     public function delete($id = null)
     {
-        $this->request->allowMethod(['post', 'delete']);
-        $registro = $this->Registros->get($id);
-        if ($this->Registros->delete($registro)) {
-            $this->Flash->success(__('The registro has been deleted.'));
-        } else {
-            $this->Flash->error(__('The registro could not be deleted. Please, try again.'));
-        }
+        if ($this->Authentication->getIdentity()->get('role') == 2) {
+            $this->request->allowMethod(['post', 'delete']);
+            $registro = $this->Registros->get($id);
+            if ($this->Registros->delete($registro)) {
+                $this->Flash->success(__('El registro se ha eliminado.'));
+            } else {
+                $this->Flash->error(__('El registro no se pudo eliminar.'));
+            }
 
-        return $this->redirect(['action' => 'index']);
+            return $this->redirect(['action' => 'index']);
+        } else {
+            return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
+        }
     }
 
     public function exportCsv($fechaInicio = null, $fechaFin = null)
@@ -203,19 +219,23 @@ class RegistrosController extends AppController
 
     public function exportPdf($id = null)
     {
-        $this->viewBuilder()->enableAutoLayout(false);
-        $registro = $this->Registros->get($id, [
-            'contain' => ['Sucursales', 'Estados', 'Categorias'],
-        ]);
-        $this->viewBuilder()->setClassName('CakePdf.pdf');
-        $this->viewBuilder()->setOption(
-            'pdfConfig',
-            [
-                'orientation' => 'portrait',
-                'download' => true,
-                'filename' => 'Report_' . $id . '_' . date('Y-m-d_H_i_s', strtotime($registro->fecha_registro->format('Y-m-d H:i:s'))) . '.pdf'
-            ]
-        );
-        $this->set('registro', $registro);
+        if ($this->Authentication->getIdentity()->get('role') == 2) {
+            $this->viewBuilder()->enableAutoLayout(false);
+            $registro = $this->Registros->get($id, [
+                'contain' => ['Sucursales', 'Estados', 'Categorias'],
+            ]);
+            $this->viewBuilder()->setClassName('CakePdf.pdf');
+            $this->viewBuilder()->setOption(
+                'pdfConfig',
+                [
+                    'orientation' => 'portrait',
+                    'download' => true,
+                    'filename' => 'Report_' . $id . '_' . date('Y-m-d_H_i_s', strtotime($registro->fecha_registro->format('Y-m-d H:i:s'))) . '.pdf'
+                ]
+            );
+            $this->set('registro', $registro);
+        } else {
+            return $this->redirect(['controller' => 'Pages', 'action' => 'display', 'home']);
+        }
     }
 }

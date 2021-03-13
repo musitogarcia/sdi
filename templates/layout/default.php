@@ -56,15 +56,22 @@
             <?php if ($this->Identity->isLoggedIn()) : ?>
                 <div class="collapse navbar-collapse" id="navbarText">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link <?php echo isset($tab) ? (($tab == 'registro') ? "active" : "") : "" ?>" href=<?= $this->Url->build(['controller' => 'registros', 'action' => 'add']) ?>>Registro de productos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <?php echo isset($tab) ? (($tab == 'bandeja') ? "active" : "") : "" ?>" href=<?= $this->Url->build(['controller' => 'registros', 'action' => 'index']) ?>>Bandeja de productos</a>
-                        </li>
-                        <?php if ($this->Identity->get('role') === 0) : ?>
+                        <?php if ($this->Identity->get('profile')['id'] === 3) : ?>
                             <li class="nav-item">
-                                <a class="nav-link <?php echo isset($tab) ? (($tab == 'reportes') ? "active" : "") : "" ?>" href=<?= $this->Url->build(['controller' => 'registros', 'action' => 'reportes']) ?>>Reportes</a>
+                                <a class="nav-link <?php echo isset($tab) ? (($tab == 'registro') ? "active" : "") : "" ?>" href=<?= $this->Url->build(['controller' => 'registros', 'action' => 'add']) ?>>Registro de productos</a>
+                            </li>
+                        <?php endif; ?>
+                        <?php if ($this->Identity->get('profile')['id'] === 2) : ?>
+                            <li class="nav-item">
+                                <a class="nav-link <?php echo isset($tab) ? (($tab == 'bandeja') ? "active" : "") : "" ?>" href=<?= $this->Url->build(['controller' => 'registros', 'action' => 'index']) ?>>Bandeja de productos</a>
+                            </li>
+                        <?php endif; ?>
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo isset($tab) ? (($tab == 'reportes') ? "active" : "") : "" ?>" href=<?= $this->Url->build(['controller' => 'registros', 'action' => 'reportes']) ?>>Reportes</a>
+                        </li>
+                        <?php if ($this->Identity->get('profile')['id'] === 1) : ?>
+                            <li class="nav-item">
+                                <a class="nav-link <?php echo isset($tab) ? (($tab == 'usuarios') ? "active" : "") : "" ?>" href=<?= $this->Url->build(['controller' => 'users', 'action' => 'index']) ?>>Usuarios</a>
                             </li>
                         <?php endif; ?>
                     </ul>

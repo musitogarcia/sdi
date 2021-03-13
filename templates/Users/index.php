@@ -8,9 +8,9 @@
     <?= $this->Html->link(__('New User'), ['action' => 'add'], ['class' => 'button float-right']) ?>
     <h3><?= __('Users') ?></h3>
     <div class="table-responsive">
-        <table>
+        <table class="table table-light table-bordered table-striped table-hover">
             <thead>
-                <tr>
+                <tr class="table-light">
                     <th><?= $this->Paginator->sort('id') ?></th>
                     <th><?= $this->Paginator->sort('username') ?></th>
                     <th><?= $this->Paginator->sort('name') ?></th>

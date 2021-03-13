@@ -84,7 +84,7 @@
         if (!password) {
             $('#error-password').html('Ingresa una contraseña');
         } else {
-            if (password.length > 10) {
+            if (password.length >= 10) {
                 $('#password').get(0).setCustomValidity('');
                 return true;
             } else {
