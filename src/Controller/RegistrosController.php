@@ -23,8 +23,19 @@ class RegistrosController extends AppController
     public function index()
     {
         $this->set('tab', 'bandeja');
-        $registros = $this->paginate($this->Registros);
-
+        $registros = $this->Registros->find()
+            ->select(
+                [
+                    'id' => 'Registros.id',
+                    'nombre' => 'Registros.nombre',
+                    'categoria' => 'Categorias.descripcion',
+                    'sucursal' => 'Sucursales.ubicacion',
+                    'id_estado' => 'Registros.id_estado'
+                ]
+            )
+            ->innerJoinWith('Sucursales')
+            ->innerJoinWith('Categorias');
+        $registros = $this->paginate($registros);
         $this->set(compact('registros'));
     }
 
@@ -38,7 +49,7 @@ class RegistrosController extends AppController
     public function view($id = null)
     {
         $registro = $this->Registros->get($id, [
-            'contain' => [],
+            'contain' => ['Sucursales', 'Estados', 'Categorias'],
         ]);
 
         $this->set(compact('registro'));
@@ -88,7 +99,7 @@ class RegistrosController extends AppController
     public function edit($id = null)
     {
         $registro = $this->Registros->get($id, [
-            'contain' => [],
+            'contain' => ['Sucursales', 'Estados', 'Categorias'],
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $registro = $this->Registros->patchEntity($registro, $this->request->getData());
@@ -132,10 +143,10 @@ class RegistrosController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
-    public function export($fechaInicio = null, $fechaFin = null)
+    public function exportCsv($fechaInicio = null, $fechaFin = null)
     {
         if (isset($fechaInicio) && isset($fechaFin)) {
-            $query = $this->Registros->find('all')
+            $query = $this->Registros->find()
                 ->where([
                     'fecha_registro >=' => Date("Y-m-d H:i:s", strtotime($fechaInicio)),
                     'fecha_registro <' => Date("Y-m-d H:i:s", strtotime($fechaFin))
@@ -170,7 +181,7 @@ class RegistrosController extends AppController
             'Fecha de modificación'
         ];
 
-        $this->setResponse($this->getResponse()->withDownload('reporte_' . date('Y-m-d_H_i_s') . (isset($masivo) ? '_masivo' : '') . '.csv'));
+        $this->setResponse($this->getResponse()->withDownload('registro_' . date('Y-m-d_H_i_s') . (isset($masivo) ? '_masivo' : '') . '.csv'));
         $this->set(compact('registros'));
         $this->viewBuilder()
             ->setClassName('CsvView.Csv')
@@ -186,7 +197,25 @@ class RegistrosController extends AppController
 
         if (!empty($this->request->getData())) {
 
-            $this->export($this->request->getData()['inicio'], $this->request->getData()['final']);
+            $this->exportCsv($this->request->getData()['inicio'], $this->request->getData()['final']);
         }
+    }
+
+    public function exportPdf($id = null)
+    {
+        $this->viewBuilder()->enableAutoLayout(false);
+        $registro = $this->Registros->get($id, [
+            'contain' => ['Sucursales', 'Estados', 'Categorias'],
+        ]);
+        $this->viewBuilder()->setClassName('CakePdf.pdf');
+        $this->viewBuilder()->setOption(
+            'pdfConfig',
+            [
+                'orientation' => 'portrait',
+                'download' => true,
+                'filename' => 'Report_' . $id . '_' . date('Y-m-d_H_i_s', strtotime($registro->fecha_registro->format('Y-m-d H:i:s'))) . '.pdf'
+            ]
+        );
+        $this->set('registro', $registro);
     }
 }

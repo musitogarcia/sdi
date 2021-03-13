@@ -29,12 +29,12 @@
                 </div>
                 <div class="mb-3">
                     <label for="id-categoria" class="form-label">Categoría</label>
-                    <?= $this->Form->control('id_categoria', ['label' => false, 'maxlength' => '100', 'class' => 'form-control', 'required' => false, 'disabled' => true]) ?>
+                    <?= $this->Form->control('categoria', ['label' => false, 'maxlength' => '100', 'class' => 'form-control', 'required' => false, 'disabled' => true, 'value' => $registro->categoria['descripcion']]) ?>
                     <div id="error-id-categoria" class="invalid-feedback"></div>
                 </div>
                 <div class="mb-3">
                     <label for="id-sucursal" class="form-label">Sucursal</label>
-                    <?= $this->Form->control('id_sucursal', ['label' => false, 'maxlength' => '100', 'class' => 'form-control', 'required' => false, 'disabled' => true]) ?>
+                    <?= $this->Form->control('sucursal', ['label' => false, 'maxlength' => '100', 'class' => 'form-control', 'required' => false, 'disabled' => true, 'value' => $registro->sucursal['ubicacion']]) ?>
                     <div id="error-id-sucursal" class="invalid-feedback"></div>
                 </div>
                 <div class="mb-3">

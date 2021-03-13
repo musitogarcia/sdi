@@ -57,6 +57,8 @@ implements
      */
     public function bootstrap(): void
     {
+        $this->addPlugin('CakePdf');
+
         $this->addPlugin('CsvView');
 
         // Call parent to load bootstrap from files.

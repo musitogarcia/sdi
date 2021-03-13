@@ -93,6 +93,7 @@ class RegistrosTable extends Table
 
         $validator
             ->scalar('comentarios')
+            ->maxLength('descripcion', 100)
             ->allowEmptyString('comentarios');
 
         $validator

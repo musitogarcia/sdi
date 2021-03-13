@@ -47,7 +47,7 @@ class UsersTable extends Table
         $this->setPrimaryKey('id');
         $this->belongsTo('Roles', [
             'foreignKey' => 'role',
-            'propertyName' => 'role'
+            'propertyName' => 'role_c'
         ]);
 
         $this->addBehavior('Timestamp');

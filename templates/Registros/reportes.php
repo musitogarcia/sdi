@@ -11,7 +11,7 @@
             <div class="card-body">
                 <legend><?= __('Descarga masiva') ?></legend>
                 <p class="card-text">Descargar todos los registros en formato CSV.</p>
-                <a href=<?= $this->Url->build(['controller' => 'registros', 'action' => 'export']) ?> class="btn btn-success">Descargar CSV</a>
+                <a href=<?= $this->Url->build(['controller' => 'registros', 'action' => 'exportCsv']) ?> class="btn btn-success">Descargar CSV</a>
                 <div class="mb-xl-5"></div>
                 <div class="mb-xl-5"></div>
             </div>
