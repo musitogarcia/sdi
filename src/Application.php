@@ -56,7 +56,7 @@ use Authorization\Policy\OrmResolver;
 class Application extends BaseApplication
 implements
     AuthenticationServiceProviderInterface
-    //,AuthorizationServiceProviderInterface
+    ,AuthorizationServiceProviderInterface
 {
     /**
      * Load all the application configuration and bootstrap logic.
@@ -65,6 +65,8 @@ implements
      */
     public function bootstrap(): void
     {
+        $this->addPlugin('CsvView');
+
         // Call parent to load bootstrap from files.
         parent::bootstrap();
 
@@ -85,7 +87,7 @@ implements
             $this->addPlugin('DebugKit');
         }
         // Load more plugins here
-        //$this->addPlugin('Authorization');
+        $this->addPlugin('Authorization');
     }
 
     /**
@@ -103,7 +105,7 @@ implements
             ->add(new AuthenticationMiddleware($this));
 
 
-        // $middlewareQueue->add(new AuthorizationMiddleware($this));
+        $middlewareQueue->add(new AuthorizationMiddleware($this));
 
         return $middlewareQueue;
     }

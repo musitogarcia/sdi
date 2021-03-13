@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -113,9 +114,9 @@ class UsersController extends AppController
         $this->Authentication->addUnauthenticatedActions(['login']);
     }
 
-public function login()
+    public function login()
     {
-
+        $this->Authorization->skipAuthorization();
         $this->request->allowMethod(['get', 'post']);
         $result = $this->Authentication->getResult();
         $estado = $result->getStatus();
@@ -169,6 +170,7 @@ public function login()
 
     public function logout()
     {
+        $this->Authorization->skipAuthorization();
         $result = $this->Authentication->getResult();
 
         if ($result->isValid()) {

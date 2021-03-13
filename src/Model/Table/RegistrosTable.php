@@ -40,6 +40,21 @@ class RegistrosTable extends Table
         $this->setTable('registros');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
+
+        $this->belongsTo('Estados', [
+            'foreignKey' => 'id_estado',
+            'propertyName' => 'estado'
+        ]);
+
+        $this->belongsTo('Categorias', [
+            'foreignKey' => 'id_categoria',
+            'propertyName' => 'categoria'
+        ]);
+
+        $this->belongsTo('Sucursales', [
+            'foreignKey' => 'id_sucursal',
+            'propertyName' => 'sucursal'
+        ]);
     }
 
     /**

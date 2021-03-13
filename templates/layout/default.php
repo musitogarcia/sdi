@@ -39,6 +39,7 @@
 
     <?= $this->Html->script('jquery-3.6.0.min') ?>
     <?= $this->Html->script('bootstrap.min.js') ?>
+    <script src="https://kit.fontawesome.com/9143a41527.js" crossorigin="anonymous"></script>
 
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
@@ -56,23 +57,18 @@
                 <div class="collapse navbar-collapse" id="navbarText">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link <?php echo ($tab == 'registro') ? "active" : "" ?>" href=<?= $this->Url->build(['controller' => 'registros', 'action' => 'add']) ?>>Registro de productos</a>
+                            <a class="nav-link <?php echo isset($tab) ? (($tab == 'registro') ? "active" : "") : "" ?>" href=<?= $this->Url->build(['controller' => 'registros', 'action' => 'add']) ?>>Registro de productos</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <?php echo ($tab == 'bandeja') ? "active" : "" ?>" href=<?= $this->Url->build(['controller' => 'registros', 'action' => 'index']) ?>>Bandeja de productos</a>
+                            <a class="nav-link <?php echo isset($tab) ? (($tab == 'bandeja') ? "active" : "") : "" ?>" href=<?= $this->Url->build(['controller' => 'registros', 'action' => 'index']) ?>>Bandeja de productos</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Reportes</a>
+                            <a class="nav-link <?php echo isset($tab) ? (($tab == 'reportes') ? "active" : "") : "" ?>" href=<?= $this->Url->build(['controller' => 'registros', 'action' => 'reportes']) ?>>Reportes</a>
                         </li>
                     </ul>
-                    <ul class="nav nav-tabs">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><?= $this->Identity->get('username') ?></a>
-                            <ul class="dropdown-menu pull-left">
-                                <li><a class="dropdown-item" href=<?= $this->Url->build(['controller' => 'users', 'action' => 'logout']) ?>>Cerrar sesión</a></li>
-                            </ul>
-                        </li>
-                    </ul>
+                    <span class="navbar-text">
+                        <a class="dropdown-item" href=<?= $this->Url->build(['controller' => 'users', 'action' => 'logout']) ?>><b><?= $this->Identity->get('username') ?></b> | Cerrar sesión</a>
+                    </span>
                 </div>
             <?php endif; ?>
         </div>
@@ -83,8 +79,9 @@
             <?= $this->fetch('content') ?>
         </div>
     </main>
-    <footer class="footer bg-dark mt-3 text-light p-4 text-center ">
+    <footer class="footer bg-dark mt-5 text-light p-4 text-center ">
         <span><b>José Alejandro Musito García</b></span>
     </footer>
 </body>
+
 </html>

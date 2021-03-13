@@ -19,42 +19,10 @@
     <?= $this->Form->button('Acceder', ['type' => 'submit', 'id' => 'access-button', 'class' => 'btn btn-success']); ?>
     <?= $this->Form->end() ?>
 
-    <!--<?= $this->Html->link("Add User", ['action' => 'add']) ?>-->
-
     <div id="resultado"></div>
 </div>
 
 <script>
-    // $(document).ready(function() {
-    //     $("#form-login").submit(function(event) {
-    //         event.preventDefault();
-    //         let campoUsuario = validarUsuario($('#username').val());
-    //         let campoContrasena = validarContrasena($('#password').val());
-
-    //         if (campoUsuario && campoContrasena) {
-    //             // $.ajax({
-    //             //     type: "POST",
-    //             //     url: $("#form-login").attr('action'),
-    //             //     data: $("#form-login").serialize(),
-    //             //     datatype: 'json',
-    //             //     success: function(response) {
-    //             //         if (response == 1) {
-    //             //             window.location.href = "/sdi";
-    //             //         } else {
-    //             //             if (response == 2) {
-    //             //                 alert('No se ha encontrado el usuario');
-    //             //             } else if (response == 3) {
-    //             //                 alert('Contraseña incorrecta');
-    //             //             } else {
-    //             //                 alert('Error iniciando sesión');
-    //             //             }
-    //             //         }
-    //             //     }
-    //             // });
-    //         }
-    //     });
-    // });
-
     $(document).ready(function() {
         $("#form-login").submit(function(event) {
             event.preventDefault();

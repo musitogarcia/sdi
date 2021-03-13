@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Model\Entity\Registro;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -104,7 +105,6 @@ class RegistrosController extends AppController
             ));
             $this->RequestHandler->renderAs($this, 'json');
         } else {
-            $this->set('tab', 'registro');
             $estados = TableRegistry::getTableLocator()->get('Estados');
             $opcionesEstados = $estados->find('all')->combine('id', 'descripcion');
             $this->set(compact('opcionesEstados'));
@@ -130,5 +130,63 @@ class RegistrosController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    public function export($fechaInicio = null, $fechaFin = null)
+    {
+        if (isset($fechaInicio) && isset($fechaFin)) {
+            $query = $this->Registros->find('all')
+                ->where([
+                    'fecha_registro >=' => Date("Y-m-d H:i:s", strtotime($fechaInicio)),
+                    'fecha_registro <' => Date("Y-m-d H:i:s", strtotime($fechaFin))
+                ]);
+        } else {
+            $query = $this->Registros->find();
+            $masivo = 1;
+        }
+        $query->select(
+            [
+                'id' => 'Registros.id',
+                'nombre' => 'Registros.nombre',
+                'descripcion' => 'Registros.descripcion',
+                'categoria' => 'Categorias.descripcion',
+                'sucursal' => 'Sucursales.ubicacion',
+                'precio' => 'Registros.precio',
+                'fecha_compra' => 'Registros.fecha_compra',
+                'estado' => 'Estados.descripcion',
+                'comentarios' => 'Registros.comentarios',
+                'fecha_registro' => 'Registros.fecha_registro',
+                'fecha_modificacion' => 'Registros.fecha_modificacion'
+            ]
+        )
+            ->innerJoinWith('Sucursales')
+            ->innerJoinWith('Categorias')
+            ->innerJoinWith('Estados');
+
+        $registros = $this->paginate($query);
+        $header = [
+            'ID', 'Nombre', 'Descripción', 'Categoría', 'Sucursal',
+            'Precio', 'Fecha de compra', 'Estado', 'Comentarios', 'Fecha de registro',
+            'Fecha de modificación'
+        ];
+
+        $this->setResponse($this->getResponse()->withDownload('reporte_' . date('Y-m-d_H_i_s') . (isset($masivo) ? '_masivo' : '') . '.csv'));
+        $this->set(compact('registros'));
+        $this->viewBuilder()
+            ->setClassName('CsvView.Csv')
+            ->setOptions([
+                'serialize' => 'registros',
+                'header' => $header
+            ]);
+    }
+
+    public function reportes()
+    {
+        $this->set('tab', 'reportes');
+
+        if (!empty($this->request->getData())) {
+
+            $this->export($this->request->getData()['inicio'], $this->request->getData()['final']);
+        }
     }
 }
