@@ -5,24 +5,16 @@
  */
 ?>
 <div class="registros index content">
-    <?= $this->Html->link(__('New Registro'), ['action' => 'add'], ['class' => 'button float-right']) ?>
     <h3><?= __('Registros') ?></h3>
     <div class="table-responsive">
-        <table>
+        <table class="table table-light table-bordered table-striped table-hover">
             <thead>
-                <tr>
+                <tr class="table-light">
                     <th><?= $this->Paginator->sort('id') ?></th>
                     <th><?= $this->Paginator->sort('nombre') ?></th>
-                    <th><?= $this->Paginator->sort('descripcion') ?></th>
-                    <th><?= $this->Paginator->sort('precio') ?></th>
-                    <th><?= $this->Paginator->sort('fecha_compra') ?></th>
-                    <th><?= $this->Paginator->sort('comentarios') ?></th>
-                    <th><?= $this->Paginator->sort('fecha_registro') ?></th>
-                    <th><?= $this->Paginator->sort('fecha_modificacion') ?></th>
-                    <th><?= $this->Paginator->sort('id_categoria') ?></th>
-                    <th><?= $this->Paginator->sort('id_sucursal') ?></th>
-                    <th><?= $this->Paginator->sort('id_estado') ?></th>
-                    <th class="actions"><?= __('Actions') ?></th>
+                    <th><?= $this->Paginator->sort('id_categoria', ['text' => 'Categoría']) ?></th>
+                    <th><?= $this->Paginator->sort('id_sucursal', ['text' => 'Sucursal']) ?></th>
+                    <th class="actions"><?= __('Acciones') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -30,19 +22,12 @@
                 <tr>
                     <td><?= $this->Number->format($registro->id) ?></td>
                     <td><?= h($registro->nombre) ?></td>
-                    <td><?= h($registro->descripcion) ?></td>
-                    <td><?= $this->Number->format($registro->precio) ?></td>
-                    <td><?= h($registro->fecha_compra) ?></td>
-                    <td><?= $this->Number->format($registro->comentarios) ?></td>
-                    <td><?= h($registro->fecha_registro) ?></td>
-                    <td><?= h($registro->fecha_modificacion) ?></td>
                     <td><?= $this->Number->format($registro->id_categoria) ?></td>
                     <td><?= $this->Number->format($registro->id_sucursal) ?></td>
-                    <td><?= $this->Number->format($registro->id_estado) ?></td>
                     <td class="actions">
-                        <?= $this->Html->link(__('View'), ['action' => 'view', $registro->id]) ?>
+                        <!-- <?= $this->Html->link(__('View'), ['action' => 'view', $registro->id]) ?> -->
                         <?= $this->Html->link(__('Edit'), ['action' => 'edit', $registro->id]) ?>
-                        <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $registro->id], ['confirm' => __('Are you sure you want to delete # {0}?', $registro->id)]) ?>
+                        <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $registro->id], ['confirm' => __('¿Eliminar el registro # {0}?', $registro->id)]) ?>
                     </td>
                 </tr>
                 <?php endforeach; ?>

@@ -71,4 +71,14 @@ class UsersTableTest extends TestCase
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
+
+    /**
+     * Test findForAuthentication method
+     *
+     * @return void
+     */
+    public function testFindForAuthentication(): void
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
 }

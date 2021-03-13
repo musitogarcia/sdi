@@ -40,7 +40,7 @@ class RolesFixture extends TestFixture
             [
                 'id' => 1,
                 'descripcion' => 'Lorem ipsum dolor sit amet',
-                'fecha_modificacion' => '2021-03-12 02:18:22',
+                'fecha_modificacion' => '2021-03-12 16:43:21',
             ],
         ];
         parent::init();

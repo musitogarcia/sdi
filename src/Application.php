@@ -56,6 +56,7 @@ use Authorization\Policy\OrmResolver;
 class Application extends BaseApplication
 implements
     AuthenticationServiceProviderInterface
+    //,AuthorizationServiceProviderInterface
 {
     /**
      * Load all the application configuration and bootstrap logic.
@@ -84,7 +85,7 @@ implements
             $this->addPlugin('DebugKit');
         }
         // Load more plugins here
-        $this->addPlugin('Authorization');
+        //$this->addPlugin('Authorization');
     }
 
     /**
@@ -102,7 +103,7 @@ implements
             ->add(new AuthenticationMiddleware($this));
 
 
-        //$middlewareQueue->add(new AuthorizationMiddleware($this));
+        // $middlewareQueue->add(new AuthorizationMiddleware($this));
 
         return $middlewareQueue;
     }
@@ -116,6 +117,10 @@ implements
 
         // Load identifiers, ensure we check email and password fields
         $authenticationService->loadIdentifier('Authentication.Password', [
+            'resolver' => [
+                'className' => 'Authentication.Orm',
+                'finder' => 'forAuthentication',
+            ],
             'fields' => [
                 'username' => 'username',
                 'password' => 'password',
@@ -134,6 +139,13 @@ implements
         ]);
 
         return $authenticationService;
+    }
+
+    public function getAuthorizationService(ServerRequestInterface $request): AuthorizationServiceInterface
+    {
+        $resolver = new OrmResolver();
+
+        return new AuthorizationService($resolver);
     }
 
     /**

@@ -9,7 +9,7 @@ use Cake\ORM\Entity;
  * Estado Entity
  *
  * @property int $id
- * @property int $descripcion
+ * @property string $descripcion
  * @property \Cake\I18n\FrozenTime|null $fecha_modificacion
  */
 class Estado extends Entity

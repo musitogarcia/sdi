@@ -55,7 +55,8 @@ class EstadosTable extends Table
             ->allowEmptyString('id', null, 'create');
 
         $validator
-            ->integer('descripcion')
+            ->scalar('descripcion')
+            ->maxLength('descripcion', 30)
             ->requirePresence('descripcion', 'create')
             ->notEmptyString('descripcion');
 

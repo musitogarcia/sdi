@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -23,7 +22,6 @@ class UsersController extends AppController
      */
     public function index()
     {
-        //$this->Authorization->skipAuthorization();
         $users = $this->paginate($this->Users);
 
         $this->set(compact('users'));
@@ -39,7 +37,7 @@ class UsersController extends AppController
     public function view($id = null)
     {
         $user = $this->Users->get($id, [
-            'contain' => ['Articles'],
+            'contain' => ['Roles'],
         ]);
 
         $this->set(compact('user'));
@@ -74,7 +72,6 @@ class UsersController extends AppController
      */
     public function edit($id = null)
     {
-        //$this->Authorization->skipAuthorization();
         $user = $this->Users->get($id, [
             'contain' => [],
         ]);
@@ -99,7 +96,6 @@ class UsersController extends AppController
      */
     public function delete($id = null)
     {
-        //$this->Authorization->skipAuthorization();
         $this->request->allowMethod(['post', 'delete']);
         $user = $this->Users->get($id);
         if ($this->Users->delete($user)) {
@@ -117,9 +113,8 @@ class UsersController extends AppController
         $this->Authentication->addUnauthenticatedActions(['login']);
     }
 
-    public function login()
+public function login()
     {
-        //$this->Authorization->skipAuthorization();
 
         $this->request->allowMethod(['get', 'post']);
         $result = $this->Authentication->getResult();
@@ -174,8 +169,6 @@ class UsersController extends AppController
 
     public function logout()
     {
-        //$this->Authorization->skipAuthorization();
-
         $result = $this->Authentication->getResult();
 
         if ($result->isValid()) {

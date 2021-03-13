@@ -77,7 +77,7 @@ class RegistrosTable extends Table
             ->notEmptyDateTime('fecha_compra');
 
         $validator
-            ->integer('comentarios')
+            ->scalar('comentarios')
             ->allowEmptyString('comentarios');
 
         $validator

@@ -13,7 +13,7 @@ use Cake\ORM\Entity;
  * @property string $descripcion
  * @property float $precio
  * @property \Cake\I18n\FrozenTime $fecha_compra
- * @property int|null $comentarios
+ * @property string|null $comentarios
  * @property \Cake\I18n\FrozenTime|null $fecha_registro
  * @property \Cake\I18n\FrozenTime|null $fecha_modificacion
  * @property int $id_categoria

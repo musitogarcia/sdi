@@ -28,8 +28,12 @@ class UsersFixture extends TestFixture
         'role' => ['type' => 'integer', 'length' => null, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'created' => ['type' => 'datetime', 'length' => null, 'precision' => null, 'null' => true, 'default' => null, 'comment' => ''],
         'modified' => ['type' => 'datetime', 'length' => null, 'precision' => null, 'null' => true, 'default' => null, 'comment' => ''],
+        '_indexes' => [
+            'fk_usuarios_roles' => ['type' => 'index', 'columns' => ['role'], 'length' => []],
+        ],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
+            'fk_usuarios_roles' => ['type' => 'foreign', 'columns' => ['role'], 'references' => ['roles', 'id'], 'update' => 'restrict', 'delete' => 'restrict', 'length' => []],
         ],
         '_options' => [
             'engine' => 'InnoDB',
@@ -55,8 +59,8 @@ class UsersFixture extends TestFixture
                 'password' => 'Lorem ipsum dolor sit amet',
                 'access' => 1,
                 'role' => 1,
-                'created' => '2021-03-12 01:37:00',
-                'modified' => '2021-03-12 01:37:00',
+                'created' => '2021-03-12 16:37:12',
+                'modified' => '2021-03-12 16:37:12',
             ],
         ];
         parent::init();

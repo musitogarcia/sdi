@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Cake\ORM\TableRegistry;
+
 /**
  * Registros Controller
  *
@@ -19,7 +21,7 @@ class RegistrosController extends AppController
      */
     public function index()
     {
-        //$this->Authorization->skipAuthorization();
+        $this->set('tab', 'bandeja');
         $registros = $this->paginate($this->Registros);
 
         $this->set(compact('registros'));
@@ -48,19 +50,31 @@ class RegistrosController extends AppController
      */
     public function add()
     {
-        //$this->Authorization->skipAuthorization();
-
         $registro = $this->Registros->newEmptyEntity();
         if ($this->request->is('post')) {
             $registro = $this->Registros->patchEntity($registro, $this->request->getData());
+            $output = 0;
             if ($this->Registros->save($registro)) {
-                $this->Flash->success(__('The registro has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
+                $output = 1;
             }
-            $this->Flash->error(__('The registro could not be saved. Please, try again.'));
         }
-        $this->set(compact('registro'));
+
+        if (!empty($this->request->getData())) {
+            $this->set(array(
+                'output' => $output,
+                '_serialize' => 'output'
+            ));
+            $this->RequestHandler->renderAs($this, 'json');
+        } else {
+            $this->set('tab', 'registro');
+            $categorias = TableRegistry::getTableLocator()->get('Categorias');
+            $sucursales = TableRegistry::getTableLocator()->get('Sucursales');
+            $opcionesCategorias = $categorias->find('all')->combine('id', 'descripcion');
+            $opcionesSucursales = $sucursales->find('all')->combine('id', 'ubicacion');
+            $this->set(compact('opcionesCategorias'));
+            $this->set(compact('opcionesSucursales'));
+            $this->set(compact('registro'));
+        }
     }
 
     /**
@@ -77,14 +91,25 @@ class RegistrosController extends AppController
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $registro = $this->Registros->patchEntity($registro, $this->request->getData());
+            $output = 0;
             if ($this->Registros->save($registro)) {
-                $this->Flash->success(__('The registro has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
+                $output = 1;
             }
-            $this->Flash->error(__('The registro could not be saved. Please, try again.'));
         }
-        $this->set(compact('registro'));
+
+        if (!empty($this->request->getData())) {
+            $this->set(array(
+                'output' => $output,
+                '_serialize' => 'output'
+            ));
+            $this->RequestHandler->renderAs($this, 'json');
+        } else {
+            $this->set('tab', 'registro');
+            $estados = TableRegistry::getTableLocator()->get('Estados');
+            $opcionesEstados = $estados->find('all')->combine('id', 'descripcion');
+            $this->set(compact('opcionesEstados'));
+            $this->set(compact('registro'));
+        }
     }
 
     /**

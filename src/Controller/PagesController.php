@@ -45,7 +45,7 @@ class PagesController extends AppController
      */
     public function display(string ...$path): ?Response
     {
-        //$this->Authorization->skipAuthorization();
+        $this->set('tab', 'home');
         if (!$path) {
             return $this->redirect('/');
         }

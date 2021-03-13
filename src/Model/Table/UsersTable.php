@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -44,10 +45,17 @@ class UsersTable extends Table
         $this->setTable('users');
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
+        $this->belongsTo('Roles', [
+            'foreignKey' => 'role',
+            'propertyName' => 'role'
+        ]);
 
         $this->addBehavior('Timestamp');
 
         $this->hasMany('Articles', [
+            'foreignKey' => 'user_id',
+        ]);
+        $this->hasMany('Visitas', [
             'foreignKey' => 'user_id',
         ]);
     }
@@ -125,5 +133,10 @@ class UsersTable extends Table
         $rules->add($rules->isUnique(['email']), ['errorField' => 'email']);
 
         return $rules;
+    }
+
+    public function findForAuthentication(\Cake\ORM\Query $query, array $options): \Cake\ORM\Query
+    {
+        return $query->contain('Roles');
     }
 }

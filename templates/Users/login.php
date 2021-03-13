@@ -1,15 +1,22 @@
-<div class="users form">
+<div class="users form mt-5">
     <?= $this->Flash->render() ?>
     <h3>Inicio de sesión</h3>
-    <?= $this->Form->create(null, ['id' => 'form-login']) ?>
-    <fieldset>
-        <legend><?= __('Por favor ingresa tus datos de acceso') ?></legend>
-        <?= $this->Form->label('Usuario'); ?>
-        <?= $this->Form->control('username', ['label' => false, 'maxlength' => '12']) ?>
-        <?= $this->Form->label('Contraseña'); ?>
-        <?= $this->Form->control('password', ['label' => false, 'maxlength' => '15']) ?>
+    <?= $this->Form->create(null, ['id' => 'form-login', 'class' => 'needs-validation', 'novalidate' => true]) ?>
+    <?php $this->Form->setTemplates(['inputContainer' => '{{content}}']); ?>
+    <fieldset class="mt-5">
+        <!-- <legend><?= __('Por favor ingresa tus datos de acceso') ?></legend> -->
+        <div class="mb-3">
+            <label for="username" class="form-label">Usuario</label>
+            <?= $this->Form->control('username', ['label' => false, 'maxlength' => '12', 'class' => 'form-control', 'required' => false]) ?>
+            <div id="error-username" class="invalid-feedback"></div>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <?= $this->Form->control('password', ['label' => false, 'maxlength' => '15', 'class' => 'form-control', 'required' => false]) ?>
+            <div id="error-password" class="invalid-feedback"></div>
+        </div>
     </fieldset>
-    <?= $this->Form->button('Acceder', ['type' => 'submit', 'id' => 'access-button']); ?>
+    <?= $this->Form->button('Acceder', ['type' => 'submit', 'id' => 'access-button', 'class' => 'btn btn-success']); ?>
     <?= $this->Form->end() ?>
 
     <!--<?= $this->Html->link("Add User", ['action' => 'add']) ?>-->
@@ -18,13 +25,42 @@
 </div>
 
 <script>
+    // $(document).ready(function() {
+    //     $("#form-login").submit(function(event) {
+    //         event.preventDefault();
+    //         let campoUsuario = validarUsuario($('#username').val());
+    //         let campoContrasena = validarContrasena($('#password').val());
+
+    //         if (campoUsuario && campoContrasena) {
+    //             // $.ajax({
+    //             //     type: "POST",
+    //             //     url: $("#form-login").attr('action'),
+    //             //     data: $("#form-login").serialize(),
+    //             //     datatype: 'json',
+    //             //     success: function(response) {
+    //             //         if (response == 1) {
+    //             //             window.location.href = "/sdi";
+    //             //         } else {
+    //             //             if (response == 2) {
+    //             //                 alert('No se ha encontrado el usuario');
+    //             //             } else if (response == 3) {
+    //             //                 alert('Contraseña incorrecta');
+    //             //             } else {
+    //             //                 alert('Error iniciando sesión');
+    //             //             }
+    //             //         }
+    //             //     }
+    //             // });
+    //         }
+    //     });
+    // });
+
     $(document).ready(function() {
         $("#form-login").submit(function(event) {
             event.preventDefault();
-            let campoUsuario = validarUsuario($('#username').val());
-            let campoContrasena = validarContrasena($('#password').val());
-
-            if (campoUsuario && campoContrasena) {
+            if (!verificarCampos()) {
+                event.stopPropagation();
+            } else {
                 $.ajax({
                     type: "POST",
                     url: $("#form-login").attr('action'),
@@ -35,9 +71,12 @@
                             window.location.href = "/sdi";
                         } else {
                             if (response == 2) {
-                                alert('No se ha encontrado el usuario');
+                                $('#username').get(0).setCustomValidity('Invalid');
+                                $('#password').get(0).setCustomValidity('Invalid');
+                                $('#error-username').html('No se ha encontrado el usuario');
                             } else if (response == 3) {
-                                alert('Contraseña incorrecta');
+                                $('#password').get(0).setCustomValidity('Invalid');
+                                $('#error-password').html('Contraseña incorrecta');
                             } else {
                                 alert('Error iniciando sesión');
                             }
@@ -45,34 +84,46 @@
                     }
                 });
             }
+            $('#form-login').addClass('was-validated');
         });
     });
 
-    function validarUsuario(usuario) {
-        if (!usuario) {
-            alert('Ingresa un usuario');
-            return false;
-        } else {
-            if (!/[^a-zA-Z]/.test(usuario)) {
-                return true;
-            } else {
-                alert('Tu usuario no puede contener números');
-                return false;
-            }
-        }
+    function verificarCampos() {
+        let checker = arr => arr.every(Boolean);
+
+        let username = validarUsername($('#username').val());
+        let password = validarPassword($('#password').val());
+
+        return checker([username, password]);
     }
 
-    function validarContrasena(contrasena) {
-        if (!contrasena) {
-            alert('Ingresa una contrasena');
-            return false;
+    function validarUsername(username) {
+        if (!username) {
+            $('#error-username').html('Ingresa un nombre de usuario');
         } else {
-            if (contrasena.length > 10) {
+            if (!/[^a-zA-Z]/.test(username)) {
+                $('#username').get(0).setCustomValidity('');
                 return true;
             } else {
-                alert('Ingresa una contraseña mayor a 10 caracteres');
-                return false;
+                $('#error-username').html('<p>Sólo se admiten letras</p>');
             }
         }
+        $('#username').get(0).setCustomValidity('Invalid');
+        return false;
+    }
+
+    function validarPassword(password) {
+        if (!password) {
+            $('#error-password').html('Ingresa una contraseña');
+        } else {
+            if (password.length > 10) {
+                $('#password').get(0).setCustomValidity('');
+                return true;
+            } else {
+                $('#error-password').html('<p>Ingresa una contraseña mayor a 10 caracteres</p>');
+            }
+        }
+        $('#password').get(0).setCustomValidity('Invalid');
+        return false;
     }
 </script>

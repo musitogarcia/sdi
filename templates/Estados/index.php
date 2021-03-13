@@ -21,7 +21,7 @@
                 <?php foreach ($estados as $estado): ?>
                 <tr>
                     <td><?= $this->Number->format($estado->id) ?></td>
-                    <td><?= $this->Number->format($estado->descripcion) ?></td>
+                    <td><?= h($estado->descripcion) ?></td>
                     <td><?= h($estado->fecha_modificacion) ?></td>
                     <td class="actions">
                         <?= $this->Html->link(__('View'), ['action' => 'view', $estado->id]) ?>

@@ -19,12 +19,12 @@
             <h3><?= h($estado->id) ?></h3>
             <table>
                 <tr>
-                    <th><?= __('Id') ?></th>
-                    <td><?= $this->Number->format($estado->id) ?></td>
+                    <th><?= __('Descripcion') ?></th>
+                    <td><?= h($estado->descripcion) ?></td>
                 </tr>
                 <tr>
-                    <th><?= __('Descripcion') ?></th>
-                    <td><?= $this->Number->format($estado->descripcion) ?></td>
+                    <th><?= __('Id') ?></th>
+                    <td><?= $this->Number->format($estado->id) ?></td>
                 </tr>
                 <tr>
                     <th><?= __('Fecha Modificacion') ?></th>

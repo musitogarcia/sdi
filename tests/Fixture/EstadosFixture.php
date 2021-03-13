@@ -18,7 +18,7 @@ class EstadosFixture extends TestFixture
     // phpcs:disable
     public $fields = [
         'id' => ['type' => 'integer', 'length' => null, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'autoIncrement' => true, 'precision' => null],
-        'descripcion' => ['type' => 'integer', 'length' => null, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
+        'descripcion' => ['type' => 'string', 'length' => 30, 'null' => false, 'default' => null, 'collate' => 'utf8_unicode_ci', 'comment' => '', 'precision' => null],
         'fecha_modificacion' => ['type' => 'datetime', 'length' => null, 'precision' => null, 'null' => true, 'default' => null, 'comment' => ''],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
@@ -39,8 +39,8 @@ class EstadosFixture extends TestFixture
         $this->records = [
             [
                 'id' => 1,
-                'descripcion' => 1,
-                'fecha_modificacion' => '2021-03-12 02:18:08',
+                'descripcion' => 'Lorem ipsum dolor sit amet',
+                'fecha_modificacion' => '2021-03-12 23:36:42',
             ],
         ];
         parent::init();

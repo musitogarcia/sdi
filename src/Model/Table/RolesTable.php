@@ -40,6 +40,7 @@ class RolesTable extends Table
         $this->setTable('roles');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
+        $this->hasMany('Users');
     }
 
     /**

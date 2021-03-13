@@ -34,9 +34,11 @@
 
     <link href="https://fonts.googleapis.com/css?family=Raleway:400,700" rel="stylesheet">
 
-    <?= $this->Html->css(['normalize.min', 'milligram.min', 'cake']) ?>
+    <!-- <?= $this->Html->css(['normalize.min', 'milligram.min', 'cake']) ?> -->
+    <?= $this->Html->css('bootstrap.min.css') ?>
 
-    <?= $this->Html->script('jquery-3.6.0.min'); ?>
+    <?= $this->Html->script('jquery-3.6.0.min') ?>
+    <?= $this->Html->script('bootstrap.min.js') ?>
 
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
@@ -44,15 +46,36 @@
 </head>
 
 <body>
-    <nav class="top-nav">
-        <div class="top-nav-title">
-            <a href="<?= $this->Url->build('/') ?>"><span>Sistema de </span>Inventarios</a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-2">
+        <div class="container-fluid">
+            <a class="navbar-brand" href=<?= $this->Url->build(['controller' => 'Pages', 'action' => 'display', 'home']) ?>>Sistema de <b>inventarios</b></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <?php if ($this->Identity->isLoggedIn()) : ?>
+                <div class="collapse navbar-collapse" id="navbarText">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo ($tab == 'registro') ? "active" : "" ?>" href=<?= $this->Url->build(['controller' => 'registros', 'action' => 'add']) ?>>Registro de productos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo ($tab == 'bandeja') ? "active" : "" ?>" href=<?= $this->Url->build(['controller' => 'registros', 'action' => 'index']) ?>>Bandeja de productos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Reportes</a>
+                        </li>
+                    </ul>
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><?= $this->Identity->get('username') ?></a>
+                            <ul class="dropdown-menu pull-left">
+                                <li><a class="dropdown-item" href=<?= $this->Url->build(['controller' => 'users', 'action' => 'logout']) ?>>Cerrar sesión</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            <?php endif; ?>
         </div>
-        <?php if ($this->Identity->isLoggedIn()) : ?>
-            <div class="top-nav-links">
-                <a><?php echo $this->Identity->get('username'); ?></a>
-            </div>
-        <?php endif; ?>
     </nav>
     <main class="main">
         <div class="container">
@@ -60,12 +83,8 @@
             <?= $this->fetch('content') ?>
         </div>
     </main>
-    <footer>
+    <footer class="footer bg-dark mt-3 text-light p-4 text-center ">
+        <span><b>José Alejandro Musito García</b></span>
     </footer>
 </body>
-
-<footer>
-    <span><b>José Alejandro Musito García</b></span>
-</footer>
-
 </html>
