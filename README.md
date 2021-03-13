@@ -8,11 +8,11 @@ Sistema de inventarios realizado con [cakephp/cakephp](https://github.com/cakeph
 
 ## Installacion
 
-1. Importar el script SQL llamado sdi.sql
+1. Importar el script SQL llamado `sdi.sql `.
 
 2. Clonar el repositorio.
 
-3. Instalar utilidades con Composer
+3. Instalar utilidades con Composer.
 
 ```bash
 composer install
