@@ -40,13 +40,6 @@ use Authentication\AuthenticationServiceProviderInterface;
 use Authentication\Middleware\AuthenticationMiddleware;
 use Psr\Http\Message\ServerRequestInterface;
 
-//Para autorizacion
-use Authorization\AuthorizationService;
-use Authorization\AuthorizationServiceInterface;
-use Authorization\AuthorizationServiceProviderInterface;
-use Authorization\Middleware\AuthorizationMiddleware;
-use Authorization\Policy\OrmResolver;
-
 /**
  * Application setup class.
  *
@@ -56,7 +49,6 @@ use Authorization\Policy\OrmResolver;
 class Application extends BaseApplication
 implements
     AuthenticationServiceProviderInterface
-    ,AuthorizationServiceProviderInterface
 {
     /**
      * Load all the application configuration and bootstrap logic.
@@ -87,7 +79,6 @@ implements
             $this->addPlugin('DebugKit');
         }
         // Load more plugins here
-        $this->addPlugin('Authorization');
     }
 
     /**
@@ -103,9 +94,6 @@ implements
             ->add(new RoutingMiddleware($this))
             // add Authentication after RoutingMiddleware
             ->add(new AuthenticationMiddleware($this));
-
-
-        $middlewareQueue->add(new AuthorizationMiddleware($this));
 
         return $middlewareQueue;
     }
@@ -141,13 +129,6 @@ implements
         ]);
 
         return $authenticationService;
-    }
-
-    public function getAuthorizationService(ServerRequestInterface $request): AuthorizationServiceInterface
-    {
-        $resolver = new OrmResolver();
-
-        return new AuthorizationService($resolver);
     }
 
     /**
